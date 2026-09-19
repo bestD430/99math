@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>乘法冒險遊戲</title>
+  <style>
+    body { font-family: "Microsoft JhengHei", sans-serif; background: #fff8e7; margin: 0; padding: 0; }
+    header { background: #ffcc66; padding: 20px; text-align: center; font-size: 24px; font-weight: bold; }
+    nav { background: #ffe699; padding: 10px; text-align: center; }
+    nav button { margin: 5px; padding: 10px 20px; font-size: 16px; }
+    section { padding: 20px; }
+    .question { font-size: 22px; margin: 20px 0; }
+    .options button { margin: 10px; padding: 15px; font-size: 18px; }
+    .progress { margin: 10px 0; font-size: 18px; }
+    .reward { margin: 20px 0; font-size: 18px; color: green; }
+    .badge, .sticker { display: inline-block; margin: 10px; padding: 10px; border: 2px solid #ccc; border-radius: 10px; background: #fff; }
+    footer { background: #ffcc66; padding: 10px; text-align: center; }
+  </style>
+</head>
+<body>
+
+<header>🌞 乘法冒險遊戲</header>
+
+<nav>
+  <button onclick="showPage('home')">首頁</button>
+  <button onclick="startChallenge()">隨機挑戰</button>
+  <button onclick="showPage('review')">錯題複習</button>
+  <button onclick="showPage('badges')">勳章收藏</button>
+  <button onclick="showPage('stickers')">貼紙收藏</button>
+</nav>
+
+<section id="home">
+  <h2>99乘法大挑戰</h2>
+  <p>跟著乘法冒險，一關一關學懂！</p>
+  <ul>
+    <li>積木學懂</li>
+    <li>自己算算</li>
+    <li>關關挑戰</li>
+  </ul>
+  <p>目前進度：×2 組，完成 3/8 題</p>
+</section>
+
+<section id="challenge" style="display:none;">
+  <h2>小挑戰：隨機 10 題</h2>
+  <div class="progress" id="progress">已完成 0 / 10</div>
+  <div class="question" id="question"></div>
+  <div class="options" id="options"></div>
+  <div id="feedback"></div>
+</section>
+
+<section id="review" style="display:none;">
+  <h2>錯題再挑戰</h2>
+  <p>這裡會出現你之前答錯的題目。</p>
+  <div id="reviewQuestions"></div>
+</section>
+
+<section id="badges" style="display:none;">
+  <h2>我的乘法勳章</h2>
+  <p>已收集 5 / 11 勳章</p>
+  <div class="badge">×0 黑洞探險</div>
+  <div class="badge">×2 雙倍魔法兔</div>
+  <div class="badge">×3 風車小勇士</div>
+  <div class="badge">×7 氣球小隊</div>
+  <div class="badge">×10 金色城堡</div>
+</section>
+
+<section id="stickers" style="display:none;">
+  <h2>我的貼紙收藏</h2>
+  <p>已收集 12 / 30 張貼紙</p>
+  <div class="sticker">🌈 彩虹貼紙</div>
+  <div class="sticker">🐰 魔法兔貼紙</div>
+  <div class="sticker">🌸 風車貼紙</div>
+  <div class="sticker">🧱 積木山丘貼紙</div>
+  <div class="sticker">🏰 金色城堡貼紙</div>
+</section>
+
+<footer>© 2026 乘法冒險遊戲</footer>
+
+<script>
+let currentQuestion = 0;
+let totalQuestions = 10;
+let questions = [];
+let wrongAnswers = [];
+
+function showPage(page) {
+  document.querySelectorAll('section').forEach(sec => sec.style.display = 'none');
+  document.getElementById(page).style.display = 'block';
+}
+
+function startChallenge() {
+  generateQuestions();
+  currentQuestion = 0;
+  showPage('challenge');
+  showQuestion();
+}
+
+function generateQuestions() {
+  questions = [];
+  for(let i=0; i<totalQuestions; i++) {
+    let a = Math.floor(Math.random() * 11); // 0~10
+    let b = Math.floor(Math.random() * 11); // 0~10
+    let answer = a * b;
+    questions.push({a, b, answer});
+  }
+}
+
+function showQuestion() {
+  if(currentQuestion >= totalQuestions) {
+    document.getElementById('question').innerHTML = "挑戰完成！";
+    document.getElementById('options').innerHTML = "";
+    document.getElementById('feedback').innerHTML = "🎉 恭喜完成 10 題！努力星星 +1 ⭐";
+    return;
+  }
+  let q = questions[currentQuestion];
+  document.getElementById('progress').innerHTML = "已完成 " + currentQuestion + " / " + totalQuestions;
+  document.getElementById('question').innerHTML = q.a + " × " + q.b + " = ?";
+  
+  // 隨機生成三個選項
+  let options = [q.answer];
+  while(options.length < 3) {
+    let fake = Math.floor(Math.random() * 100);
+    if(!options.includes(fake)) options.push(fake);
+  }
+  options.sort(() => Math.random() - 0.5);
+  
+  let html = "";
+  options.forEach(opt => {
+    html += `<button onclick="answer(${opt})">${opt}</button>`;
+  });
+  document.getElementById('options').innerHTML = html;
+  document.getElementById('feedback').innerHTML = "";
+}
+
+function answer(ans) {
+  let q = questions[currentQuestion];
+  if(ans === q.answer) {
+    document.getElementById('feedback').innerHTML = '<div class="reward">答對了！⭐</div>';
+  } else {
+    document.getElementById('feedback').innerHTML = '<div style="color:red;">答錯了！正確答案是 ' + q.answer + '</div>';
+    wrongAnswers.push(q);
+  }
+  currentQuestion++;
+  setTimeout(showQuestion, 1000);
+}
+
+function showReview() {
+  showPage('review');
+  let html = "";
+  wrongAnswers.forEach(q => {
+    html += `<div class="question">${q.a} × ${q.b} = ? 正確答案：${q.answer}</div>`;
+  });
+  document.getElementById('reviewQuestions').innerHTML = html || "目前沒有錯題！";
+}
+</script>
+
+</body>
+</html>
