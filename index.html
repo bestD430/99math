@@ -6,705 +6,243 @@
   <title>乘法冒險</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif;
-      background: #faf6ef;
-      color: #1e293b;
-      min-height: 100dvh;
-      padding: 0;
-      overflow-x: hidden;
-    }
-    .app {
-      max-width: 430px;
-      margin: 0 auto;
-      min-height: 100dvh;
-      background: #faf6ef;
-      position: relative;
-    }
-    .screen { display: none; padding: 12px 16px 32px; }
-    .screen.active { display: block; }
-
-    .top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 4px 8px;
-      position: sticky;
-      top: 0;
-      background: #faf6ef;
-      z-index: 20;
-    }
-    .top-right-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .btn-circle {
-      width: 42px; height: 42px;
-      border-radius: 50%;
-      border: none;
-      background: #fff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      font-size: 18px;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-    }
-    .btn-circle:active { transform: scale(0.95); }
-    .title { font-size: 17px; font-weight: 700; }
-
-    .hero {
-      background: linear-gradient(145deg, #fef9c3, #fde68a);
-      border-radius: 22px;
-      padding: 22px 18px;
-      margin: 8px 0 20px;
-      position: relative;
-    }
-    .hero h1 { font-size: 26px; font-weight: 800; margin: 4px 0 8px; }
-    .hero p { font-size: 14px; color: #475569; line-height: 1.55; margin-bottom: 16px; }
-    .steps {
-      display: flex; gap: 8px; margin-bottom: 18px;
-    }
-    .step {
-      flex: 1; background: rgba(255,255,255,0.75);
-      border-radius: 14px; padding: 12px 4px;
-      text-align: center; font-size: 12px; font-weight: 600;
-    }
-    .step .ico { font-size: 22px; display: block; margin-bottom: 4px; }
-    .btn-main {
-      width: 100%; background: #1e293b; color: #fff;
-      border: none; border-radius: 16px; padding: 16px;
-      font-size: 17px; font-weight: 700; cursor: pointer;
-    }
-    .btn-main:active { opacity: 0.9; transform: scale(0.98); }
-
-    .sec-title { font-size: 15px; font-weight: 700; margin: 18px 0 10px; }
-    .menu {
-      background: #fff; border-radius: 16px;
-      padding: 16px; margin-bottom: 10px;
-      display: flex; align-items: center; gap: 14px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-      cursor: pointer;
-    }
-    .menu:active { transform: scale(0.98); }
-    .menu-ico {
-      width: 46px; height: 46px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 22px; flex-shrink: 0;
-    }
-    .menu h3 { font-size: 15px; font-weight: 700; }
-    .menu p { font-size: 12px; color: #64748b; margin-top: 2px; }
-
-    .prog {
-      background: #fff; border-radius: 14px;
-      padding: 12px 14px; margin-bottom: 14px;
-      display: flex; align-items: center; gap: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-      font-size: 13px; font-weight: 600; color: #64748b;
-    }
-    .prog-bar {
-      flex: 1; height: 7px; background: #e2e8f0;
-      border-radius: 4px; overflow: hidden;
-    }
-    .prog-fill {
-      height: 100%; background: #3b82f6;
-      border-radius: 4px; transition: width 0.35s;
-    }
-
-    .qcard {
-      background: #1e3a5f; border-radius: 22px;
-      padding: 22px 16px; color: #fff; text-align: center;
-      margin-bottom: 18px; position: relative;
-    }
-    .qcard .hint { font-size: 14px; opacity: 0.9; margin-bottom: 12px; }
-    .eq { font-size: 40px; font-weight: 800; letter-spacing: 1px; margin-bottom: 14px; }
-    .btn-speak {
-      position: absolute; right: 14px; top: 14px;
-      background: rgba(255,255,255,0.2); border: none;
-      border-radius: 50%; width: 36px; height: 36px;
-      font-size: 18px; color: #fff; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .btn-speak:active { background: rgba(255,255,255,0.4); }
-    .tags { display: flex; justify-content: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
-    .tag {
-      background: rgba(255,255,255,0.18);
-      border-radius: 20px; padding: 6px 14px; font-size: 13px;
-    }
-    .blocks {
-      display: flex; flex-wrap: wrap; justify-content: center;
-      gap: 10px; margin-top: 8px;
-    }
-    .group {
-      display: flex; flex-wrap: wrap; gap: 5px;
-      background: rgba(255,255,255,0.12);
-      border-radius: 12px; padding: 8px;
-      max-width: 100%;
-    }
-    .block {
-      width: 24px; height: 24px;
-      background: #60a5fa; border-radius: 5px;
-      border: 2px solid #3b82f6;
-      box-shadow: 0 2px 0 #2563eb;
-    }
-
-    .opts {
-      display: grid; grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px; margin-bottom: 14px;
-    }
-    .opt {
-      background: #fff; border: 2px solid #e2e8f0;
-      border-radius: 16px; padding: 18px 0;
-      font-size: 26px; font-weight: 800;
-      cursor: pointer; color: #1e293b;
-    }
-    .opt:active { transform: scale(0.96); }
-    .opt.correct { background: #dcfce7; border-color: #22c55e; color: #166534; }
-    .opt.wrong { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
-    .opt:disabled { pointer-events: none; }
-
-    .btn-hint {
-      width: 100%; background: #fff; border: 1.5px solid #e2e8f0;
-      border-radius: 14px; padding: 15px; font-size: 15px;
-      font-weight: 600; color: #64748b; cursor: pointer;
-    }
-
-    .fb { text-align: center; padding: 28px 16px; display: none; }
-    .fb.show { display: block; }
-    .fb .emoji { font-size: 60px; margin-bottom: 10px; }
-    .fb h2 { font-size: 24px; margin-bottom: 6px; }
-    .fb p { color: #64748b; margin-bottom: 20px; font-size: 18px; }
-    .btn-next {
-      background: #3b82f6; color: #fff; border: none;
-      border-radius: 16px; padding: 16px 36px;
-      font-size: 17px; font-weight: 700; cursor: pointer;
-    }
-
-    .num-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: 12px; margin: 16px 0 22px;
-    }
-    .num {
-      aspect-ratio: 1; background: #fff; border: 2px solid #e2e8f0;
-      border-radius: 16px; font-size: 26px; font-weight: 800;
-      display: flex; flex-direction: column; align-items: center;
-      justify-content: center; cursor: pointer; color: #1e293b;
-    }
-    .num small { font-size: 11px; font-weight: 600; color: #64748b; }
-    .num:active { background: #dbeafe; border-color: #3b82f6; }
-
-    .card {
-      background: #fff; border-radius: 18px; padding: 18px;
-      margin-bottom: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-    }
-    .row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
-    .row:last-child { margin-bottom: 0; }
-    .muted { color: #64748b; }
-    .bold { font-weight: 700; }
-    .gstatus {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
-      text-align: center; font-size: 13px;
-    }
-    .gstatus div {
-      background: #f8fafc; border-radius: 12px; padding: 12px 4px;
-    }
-
-    .toast {
-      position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
-      background: rgba(30, 41, 59, 0.9); color: #fff; padding: 8px 16px;
-      border-radius: 20px; font-size: 13px; font-weight: 600;
-      z-index: 100; opacity: 0; transition: opacity 0.3s; pointer-events: none;
-    }
-    .toast.show { opacity: 1; }
-
-    .note { text-align: center; font-size: 12px; color: #94a3b8; margin-top: 20px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif; background: #faf6ef; color: #1e293b; min-height: 100dvh; overflow-x: hidden; }
+   .app { max-width: 430px; margin: 0 auto; min-height: 100dvh; background: #faf6ef; position: relative; }
+   .screen { display: none; padding: 12px 16px 32px; }
+   .screen.active { display: block; }
+   .top { display: flex; align-items: center; justify-content: space-between; padding: 12px 4px 8px; position: sticky; top: 0; background: #faf6ef; z-index: 20; }
+   .top-right-group { display: flex; align-items: center; gap: 8px; }
+   .btn-circle { width: 42px; height: 42px; border-radius: 50%; border: none; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+   .btn-circle:active { transform: scale(0.95); }
+   .btn-circle.speaking { animation: pulse 1s infinite; background: #dbeafe; }
+    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+   .title { font-size: 17px; font-weight: 700; }
+   .hero { background: linear-gradient(145deg, #fef9c3, #fde68a); border-radius: 22px; padding: 22px 18px; margin: 8px 0 20px; position: relative; }
+   .hero h1 { font-size: 26px; font-weight: 800; margin: 4px 0 8px; }
+   .hero p { font-size: 14px; color: #475569; line-height: 1.55; margin-bottom: 16px; }
+   .steps { display: flex; gap: 8px; margin-bottom: 18px; }
+   .step { flex: 1; background: rgba(255,255,255,0.75); border-radius: 14px; padding: 12px 4px; text-align: center; font-size: 12px; font-weight: 600; }
+   .step.ico { font-size: 22px; display: block; margin-bottom: 4px; }
+   .btn-main { width: 100%; background: #1e293b; color: #fff; border: none; border-radius: 16px; padding: 16px; font-size: 17px; font-weight: 700; cursor: pointer; }
+   .btn-main:active { opacity: 0.9; transform: scale(0.98); }
+   .sec-title { font-size: 15px; font-weight: 700; margin: 18px 0 10px; }
+   .menu { background: #fff; border-radius: 16px; padding: 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); cursor: pointer; }
+   .menu:active { transform: scale(0.98); }
+   .menu-ico { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+   .menu h3 { font-size: 15px; font-weight: 700; }
+   .menu p { font-size: 12px; color: #64748b; margin-top: 2px; }
+   .prog { background: #fff; border-radius: 14px; padding: 12px 14px; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); font-size: 13px; font-weight: 600; color: #64748b; }
+   .prog-bar { flex: 1; height: 7px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+   .prog-fill { height: 100%; background: #3b82f6; border-radius: 4px; transition: width 0.35s; }
+   .qcard { background: #1e3a5f; border-radius: 22px; padding: 22px 16px; color: #fff; text-align: center; margin-bottom: 18px; position: relative; }
+   .qcard.hint { font-size: 14px; opacity: 0.9; margin-bottom: 12px; }
+   .eq { font-size: 40px; font-weight: 800; letter-spacing: 1px; margin-bottom: 14px; }
+   .btn-speak { position: absolute; right: 14px; top: 14px; background: rgba(255,255,255,0.2); border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 18px; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+   .btn-speak:active { background: rgba(255,255,255,0.4); }
+   .tags { display: flex; justify-content: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+   .tag { background: rgba(255,255,255,0.18); border-radius: 20px; padding: 6px 14px; font-size: 13px; }
+   .blocks { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 8px; }
+   .group { display: flex; flex-wrap: wrap; gap: 5px; background: rgba(255,255,255,0.12); border-radius: 12px; padding: 8px; max-width: 100%; }
+   .block { width: 24px; height: 24px; background: #60a5fa; border-radius: 5px; border: 2px solid #3b82f6; box-shadow: 0 2px 0 #2563eb; }
+   .opts { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+   .opt { background: #fff; border: 2px solid #e2e8f0; border-radius: 16px; padding: 18px 0; font-size: 26px; font-weight: 800; cursor: pointer; color: #1e293b; }
+   .opt:active { transform: scale(0.96); }
+   .opt.correct { background: #dcfce7; border-color: #22c55e; color: #166534; }
+   .opt.wrong { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+   .opt:disabled { pointer-events: none; }
+   .btn-hint { width: 100%; background: #fff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 15px; font-size: 15px; font-weight: 600; color: #64748b; cursor: pointer; }
+   .fb { text-align: center; padding: 28px 16px; display: none; }
+   .fb.show { display: block; }
+   .fb.emoji { font-size: 60px; margin-bottom: 10px; }
+   .fb h2 { font-size: 24px; margin-bottom: 6px; }
+   .fb p { color: #64748b; margin-bottom: 20px; font-size: 18px; }
+   .btn-next { background: #3b82f6; color: #fff; border: none; border-radius: 16px; padding: 16px 36px; font-size: 17px; font-weight: 700; cursor: pointer; }
+   .num-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0 22px; }
+   .num { aspect-ratio: 1; background: #fff; border: 2px solid #e2e8f0; border-radius: 16px; font-size: 26px; font-weight: 800; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; color: #1e293b; }
+   .num small { font-size: 11px; font-weight: 600; color: #64748b; }
+   .num:active { background: #dbeafe; border-color: #3b82f6; }
+   .card { background: #fff; border-radius: 18px; padding: 18px; margin-bottom: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+   .row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
+   .muted { color: #64748b; }
+   .bold { font-weight: 700; }
+   .gstatus { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center; font-size: 13px; }
+   .gstatus div { background: #f8fafc; border-radius: 12px; padding: 12px 4px; }
+   .toast { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); background: rgba(30,41,59,0.92); color: #fff; padding: 10px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; z-index: 100; opacity: 0; transition: opacity 0.3s; pointer-events: none; max-width: 90%; text-align: center; }
+   .toast.show { opacity: 1; }
+   .note { text-align: center; font-size: 12px; color: #94a3b8; margin-top: 20px; }
+   .debug { font-size: 11px; color: #475569; background: #f1f5f9; border-radius: 10px; padding: 10px 12px; margin-top: 10px; word-break: break-all; white-space: pre-wrap; max-height: 160px; overflow-y: auto; }
+   .guide { background: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 12px; margin-top: 10px; }
+   .guide b { color: #92400e; }
   </style>
 </head>
 <body>
   <div class="app">
     <div id="toast" class="toast">已靜音</div>
-
     <div id="home" class="screen active">
-      <div class="top">
-        <div style="width:42px"></div>
-        <div class="title">99乘法大挑戰</div>
-        <div class="top-right-group">
-          <button class="btn-circle btn-global-mute" title="靜音開關">🔊</button>
-          <button class="btn-circle" id="btnHelpHome">?</button>
-        </div>
-      </div>
-
+      <div class="top"><div style="width:42px"></div><div class="title">99乘法大挑戰</div><div class="top-right-group"><button class="btn-circle btn-global-mute">🔊</button><button class="btn-circle" id="btnHelpHome">?</button></div></div>
       <div class="hero">
         <div style="position:absolute;right:14px;top:14px;font-size:40px">☀️</div>
-        <div style="font-size:12px;color:#854d0e;margin-bottom:2px">已解鎖全關卡 + 粵語自動讀題</div>
+        <div style="font-size:12px;color:#854d0e;margin-bottom:2px">每關10題 · 粵語已自動修復</div>
         <h1>乘法冒險</h1>
         <p>從積木看懂乘法，走到九九挑戰。<br>跟著關卡走，每次學會一小步。</p>
-        <div class="steps">
-          <div class="step"><span class="ico">🧱</span>1 積木看懂</div>
-          <div class="step"><span class="ico">✏️</span>2 自己算算</div>
-          <div class="step"><span class="ico">🚩</span>3 闖關挑戰</div>
-        </div>
+        <div class="steps"><div class="step"><span class="ico">🧱</span>1 積木看懂</div><div class="step"><span class="ico">✏️</span>2 自己算算</div><div class="step"><span class="ico">🚩</span>3 闖關挑戰</div></div>
         <button class="btn-main" id="btnStart">從第一關開始 →</button>
       </div>
-
       <div class="sec-title">加強練習</div>
-      <div class="menu" id="btnPractice">
-        <div class="menu-ico" style="background:#fee2e2">👆</div>
-        <div>
-          <h3>自選乘法練習</h3>
-          <p>自己選 2～9，練練想加強的乘法</p>
-        </div>
-      </div>
-      <div class="menu" id="btnQuick">
-        <div class="menu-ico" style="background:#dbeafe">🔄</div>
-        <div>
-          <h3>今天再想 3 個算式</h3>
-          <p>用短短一回合，把剛學到的再想一次</p>
-        </div>
-      </div>
-      <div class="menu" id="btnParent">
-        <div class="menu-ico" style="background:#f0fdf4">👨‍👧</div>
-        <div>
-          <h3>家長專區</h3>
-          <p>看看最近的學習進度</p>
-        </div>
-      </div>
-      <p class="note">全關卡已解鎖 · 一鍵全 App 靜音 · 無廣告</p>
+      <div class="menu" id="btnPractice"><div class="menu-ico" style="background:#fee2e2">👆</div><div><h3>自選乘法練習</h3><p>自己選 2～9，每關練 10 題</p></div></div>
+      <div class="menu" id="btnQuick"><div class="menu-ico" style="background:#dbeafe">🔄</div><div><h3>今天再想 10 個算式</h3><p>用短短一回合，把剛學到的再想一次</p></div></div>
+      <div class="menu" id="btnParent"><div class="menu-ico" style="background:#f0fdf4">👨‍👧</div><div><h3>家長專區</h3><p>檢查粵語聲音同進度</p></div></div>
+      <p class="note">每關10題 · 一鍵全 App 靜音 · 無廣告</p>
     </div>
-
     <div id="learn" class="screen">
-      <div class="top">
-        <button class="btn-circle" id="btnBackLearn">←</button>
-        <div class="title">看懂積木</div>
-        <div class="top-right-group">
-          <button class="btn-circle btn-global-mute" title="靜音開關">🔊</button>
-          <button class="btn-circle" id="btnHelpLearn">?</button>
-        </div>
-      </div>
-
-      <div class="prog">
-        <span id="progText">已完成 0 / 5</span>
-        <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
-        <span id="groupLabel">每組 2 塊</span>
-      </div>
-
+      <div class="top"><button class="btn-circle" id="btnBackLearn">←</button><div class="title">看懂積木</div><div class="top-right-group"><button class="btn-circle btn-global-mute">🔊</button><button class="btn-circle" id="btnHelpLearn">?</button></div></div>
+      <div class="prog"><span id="progText">已完成 0 / 10</span><div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div><span id="groupLabel">每組 2 塊</span></div>
       <div id="questionArea">
-        <div class="qcard">
-          <button class="btn-speak" id="btnSpeak" title="重新朗讀題目">🔊</button>
-          <div class="hint">想一想，積木一共有幾塊？</div>
-          <div class="eq" id="equation">2 × 2 = ?</div>
-          <div class="tags">
-            <span class="tag" id="tagA">每組 2 塊</span>
-            <span class="tag" id="tagB">共有 2 組</span>
-          </div>
-          <div class="blocks" id="blocksArea"></div>
-        </div>
-        <div class="opts" id="options"></div>
-        <button class="btn-hint" id="btnHint">💡 提示</button>
+        <div class="qcard"><button class="btn-speak" id="btnSpeak">🔊</button><div class="hint">想一想，積木一共有幾塊？</div><div class="eq" id="equation">2 × 2 =?</div><div class="tags"><span class="tag" id="tagA">每組 2 塊</span><span class="tag" id="tagB">共有 2 組</span></div><div class="blocks" id="blocksArea"></div></div>
+        <div class="opts" id="options"></div><button class="btn-hint" id="btnHint">💡 提示</button>
       </div>
-
-      <div class="fb" id="feedback">
-        <div class="emoji" id="fbEmoji">🎉</div>
-        <h2 id="fbTitle">太棒了！</h2>
-        <p id="fbMsg">2 × 2 = 4</p>
-        <button class="btn-next" id="btnNext">下一題 →</button>
-      </div>
+      <div class="fb" id="feedback"><div class="emoji" id="fbEmoji">🎉</div><h2 id="fbTitle">太棒了！</h2><p id="fbMsg">2 × 2 = 4</p><button class="btn-next" id="btnNext">下一題 →</button></div>
     </div>
-
     <div id="practice" class="screen">
-      <div class="top">
-        <button class="btn-circle" id="btnBackPractice">←</button>
-        <div class="title">我想練乘法</div>
-        <button class="btn-circle btn-global-mute" title="靜音開關">🔊</button>
-      </div>
-      <h2 style="font-size:20px;margin:10px 0 4px">今天想練哪個數字？</h2>
-      <p style="font-size:13px;color:#64748b;margin-bottom:8px">選一個，玩 5 題</p>
-      <div class="num-grid" id="numGrid"></div>
-      <div class="menu" id="btnMixed">
-        <div class="menu-ico" style="background:#e0e7ff">🔀</div>
-        <div>
-          <h3>全部混合</h3>
-          <p>2～9 的乘法，玩 10 題</p>
-        </div>
-      </div>
+      <div class="top"><button class="btn-circle" id="btnBackPractice">←</button><div class="title">我想練乘法</div><button class="btn-circle btn-global-mute">🔊</button></div>
+      <h2 style="font-size:20px;margin:10px 0 4px">今天想練哪個數字？</h2><p style="font-size:13px;color:#64748b;margin-bottom:8px">選一個，玩 10 題</p><div class="num-grid" id="numGrid"></div>
+      <div class="menu" id="btnMixed"><div class="menu-ico" style="background:#e0e7ff">🔀</div><div><h3>全部混合</h3><p>2～9 的乘法，玩 10 題</p></div></div>
     </div>
-
     <div id="parent" class="screen">
-      <div class="top">
-        <button class="btn-circle" id="btnBackParent">←</button>
-        <div class="title">家長專區</div>
-        <button class="btn-circle btn-global-mute" title="靜音開關">🔊</button>
-      </div>
-      <h2 style="font-size:18px;margin:8px 0 4px">學習摘要</h2>
-      <p style="font-size:13px;color:#64748b;margin-bottom:14px">看看最近的學習與下一步</p>
-
+      <div class="top"><button class="btn-circle" id="btnBackParent">←</button><div class="title">家長專區</div><button class="btn-circle btn-global-mute">🔊</button></div>
+      <h2 style="font-size:18px;margin:8px 0 4px">學習摘要 + 語音修復</h2>
       <div class="card">
         <div class="row"><span class="muted">今天完成題數</span><span class="bold" id="todayCount">0</span></div>
         <div class="row"><span class="muted">累積答對</span><span class="bold" id="totalCorrect">0</span></div>
-        <div class="row"><span class="muted">目前進度</span><span class="bold">全部已解鎖</span></div>
+        <div class="row"><span class="muted">目前進度</span><span class="bold">每關10題 已解鎖</span></div>
+        <div class="row"><span class="muted">粵語語音</span><span class="bold" id="voiceStatus">檢測中...</span></div>
       </div>
       <div class="card">
-        <p style="font-size:14px;font-weight:600;margin-bottom:12px">各組狀態</p>
-        <div class="gstatus" id="groupStatus"></div>
+        <p style="font-size:14px;font-weight:700;margin-bottom:8px">🔊 一鍵測試粵語</p>
+        <button class="btn-main" id="btnTestVoice" style="background:#3b82f6;margin-bottom:8px">測試：三乘三等於幾多呀？</button>
+        <button class="btn-hint" id="btnRefreshVoice">🔄 重新檢測聲音</button>
+        <div class="debug" id="voiceDebug">載入中...</div>
+        <div class="guide">
+          <p style="font-size:13px;font-weight:700;margin-bottom:6px">如果按測試都無聲：</p>
+          <p style="font-size:12px;line-height:1.6;color:#78350f">
+            <b>iPhone / iPad (iOS 17/18)：</b><br>
+            1. 設定 > 輔助使用 > <b>朗讀內容</b>（有啲版本叫「語音內容」）<br>
+            2. 聲音 > 中文 > 選擇 <b>香港 (粵語)</b> / 廣東話 > 下載<br>
+            3. 如果搵唔到「朗讀內容」：直接去 <b>設定 > 一般 > 語言與地區 > 加入語言 > 廣東話 / 粵語</b><br><br>
+            <b>Android：</b><br>
+            設定 > 系統 > 語言與輸入 > 文字轉語音輸出 > 偏好引擎選 <b>Google 文字轉語音</b> > 右上角⚙️ > 安裝語音資料 > 中文(香港)<br>
+          </p>
+        </div>
       </div>
+      <div class="card"><p style="font-size:14px;font-weight:600;margin-bottom:12px">各組狀態</p><div class="gstatus" id="groupStatus"></div></div>
       <p class="note">資料僅存在此裝置，不會上傳</p>
     </div>
   </div>
-
   <script>
-    (function () {
-      var questions = [];
-      var qIndex = 0;
-      var correctCount = 0;
-      var answered = false;
-      var isMuted = false;
-      var speechUnlocked = false;
-
-      function $(id) { return document.getElementById(id); }
-      function storageGet(key, def) {
-        try {
-          var v = localStorage.getItem('mult_' + key);
-          return v !== null ? JSON.parse(v) : def;
-        } catch (e) { return def; }
+    (function(){
+      var questions=[], qIndex=0, correctCount=0, answered=false, isMuted=false, speechUnlocked=false, cantoneseVoice=null, voicesReady=false;
+      function $(id){ return document.getElementById(id); }
+      function storageGet(k,d){ try{ var v=localStorage.getItem('mult_'+k); return v!==null?JSON.parse(v):d; }catch(e){ return d; } }
+      function storageSet(k,v){ try{ localStorage.setItem('mult_'+k, JSON.stringify(v)); }catch(e){} }
+      function showToast(m){ var t=$('toast'); t.textContent=m; t.classList.add('show'); setTimeout(function(){ t.classList.remove('show'); }, 2500); }
+      function updateMuteUI(){ var b=document.querySelectorAll('.btn-global-mute'); for(var i=0;i<b.length;i++) b[i].textContent=isMuted?'🔇':'🔊'; }
+      function toggleMute(){ isMuted=!isMuted; storageSet('isMuted', isMuted); updateMuteUI(); if(isMuted) try{ speechSynthesis.cancel(); }catch(e){} showToast(isMuted?'全 App 已靜音':'已開啟聲音'); if(!isMuted) setTimeout(speakCurrentQuestion,300); }
+      var cnNums=['零','一','二','三','四','五','六','七','八','九'];
+      function numToCn(n){ n=parseInt(n,10); if(isNaN(n)) return ''; if(n<=9) return cnNums[n]; if(n<20){ if(n===10) return '十'; return '十'+cnNums[n%10]; } if(n<100){ var t=Math.floor(n/10),o=n%10; return cnNums[t]+'十'+(o?cnNums[o]:''); } return String(n); }
+      function refreshVoices(){
+        if(!('speechSynthesis' in window)) return false;
+        var vs=speechSynthesis.getVoices(); if(!vs||!vs.length) return false;
+        var best=null;
+        var exact=vs.filter(function(v){ return (v.lang||'').toLowerCase()==='zh-hk'; }); if(exact.length) best=exact[0];
+        if(!best){ var y=vs.filter(function(v){ return (v.lang||'').toLowerCase().indexOf('yue')!==-1; }); if(y.length) best=y[0]; }
+        if(!best){ var nm=vs.filter(function(v){ var n=(v.name||'').toLowerCase(); return n.indexOf('cantonese')!==-1||n.indexOf('sin-ji')!==-1||n.indexOf('yue')!==-1||n.indexOf('hong kong')!==-1||n.indexOf('粵')!==-1; }); if(nm.length) best=nm[0]; }
+        if(!best) best=vs.find(function(v){ return (v.lang||'').toLowerCase().indexOf('zh-tw')!==-1; });
+        if(!best) best=vs.find(function(v){ return (v.lang||'').toLowerCase().indexOf('zh-cn')!==-1; });
+        if(!best) best=vs.find(function(v){ return (v.lang||'').toLowerCase().indexOf('zh')===0; });
+        if(!best) best=vs[0];
+        cantoneseVoice=best; voicesReady=true;
+        var s=$('voiceStatus'), d=$('voiceDebug');
+        if(s){ s.textContent=best?best.name+' ('+best.lang+')':'未找到，用預設 zh-HK'; s.style.color=best&& (best.lang.toLowerCase().indexOf('hk')!==-1||best.lang.toLowerCase().indexOf('yue')!==-1)?'#16a34a':'#d97706'; }
+        if(d){ d.textContent='偵測到 '+vs.length+' 個聲音：\n'+vs.map(function(v){ return '- '+v.name+' ['+v.lang+']'; }).join('\n')+'\n\n已選用：'+(best?best.name+' / '+best.lang:'無'); }
+        return true;
       }
-      function storageSet(key, val) {
-        try { localStorage.setItem('mult_' + key, JSON.stringify(val)); } catch (e) {}
-      }
-
-      function showToast(msg) {
-        var t = $('toast');
-        t.textContent = msg;
-        t.classList.add('show');
-        setTimeout(function () { t.classList.remove('show'); }, 1500);
-      }
-
-      function updateMuteUI() {
-        var btns = document.querySelectorAll('.btn-global-mute');
-        for (var i = 0; i < btns.length; i++) {
-          btns[i].textContent = isMuted ? '🔇' : '🔊';
-        }
-      }
-
-      function toggleMute() {
-        isMuted = !isMuted;
-        storageSet('isMuted', isMuted);
-        updateMuteUI();
-        if (isMuted && 'speechSynthesis' in window) {
-          window.speechSynthesis.cancel();
-        }
-        showToast(isMuted ? '全 App 已靜音' : '已開啟聲音');
-      }
-
-      // 啟用 iOS/Safari 的語音播報鎖
-      function unlockSpeech() {
-        if (!speechUnlocked && 'speechSynthesis' in window) {
-          var dummy = new SpeechSynthesisUtterance('');
-          window.speechSynthesis.speak(dummy);
-          speechUnlocked = true;
-        }
-      }
-
-      // 粵語語音朗讀
-      function speakCantonese(text) {
-        if (isMuted) return;
-        if ('speechSynthesis' in window) {
-          window.speechSynthesis.cancel(); // 停止先前語音
-          var utterance = new SpeechSynthesisUtterance(text);
-          utterance.lang = 'zh-HK';
-          utterance.rate = 0.9;
-          
-          // 解決 Android/iOS 語音引擎被中斷問題
-          setTimeout(function() {
-            window.speechSynthesis.speak(utterance);
-          }, 50);
-        }
-      }
-
-      function speakCurrentQuestion() {
-        var q = questions[qIndex];
-        if (q) {
-          var text = q.a + '乘以' + q.b + '等於幾多？';
-          speakCantonese(text);
-        }
-      }
-
-      function showScreen(id) {
-        var screens = document.querySelectorAll('.screen');
-        for (var i = 0; i < screens.length; i++) {
-          screens[i].classList.remove('active');
-        }
-        var el = $(id);
-        if (el) el.classList.add('active');
-        if (id === 'practice') renderNumGrid();
-        if (id === 'parent') updateParent();
-      }
-
-      function generateQuestions(table, count) {
-        var nums = [1,2,3,4,5,6,7,8,9];
-        for (var i = nums.length - 1; i > 0; i--) {
-          var j = Math.floor(Math.random() * (i + 1));
-          var t = nums[i]; nums[i] = nums[j]; nums[j] = t;
-        }
-        var list = [];
-        for (var k = 0; k < count; k++) {
-          var b = nums[k % 9];
-          list.push({ a: table, b: b, answer: table * b });
-        }
-        return list;
-      }
-
-      function generateMixed(count) {
-        var list = [];
-        for (var i = 0; i < count; i++) {
-          var a = Math.floor(Math.random() * 8) + 2;
-          var b = Math.floor(Math.random() * 9) + 1;
-          list.push({ a: a, b: b, answer: a * b });
-        }
-        return list;
-      }
-
-      function startAdventure() {
-        unlockSpeech();
-        questions = generateQuestions(2, 5);
-        qIndex = 0;
-        correctCount = 0;
-        showScreen('learn');
-        renderQuestion();
-      }
-
-      function startPractice(n) {
-        unlockSpeech();
-        questions = generateQuestions(n, 5);
-        qIndex = 0;
-        correctCount = 0;
-        showScreen('learn');
-        renderQuestion();
-      }
-
-      function startQuick() {
-        unlockSpeech();
-        questions = generateQuestions(2, 3);
-        qIndex = 0;
-        correctCount = 0;
-        showScreen('learn');
-        renderQuestion();
-      }
-
-      function startMixed() {
-        unlockSpeech();
-        questions = generateMixed(10);
-        qIndex = 0;
-        correctCount = 0;
-        showScreen('learn');
-        renderQuestion();
-      }
-
-      function renderQuestion() {
-        answered = false;
-        $('questionArea').style.display = 'block';
-        $('feedback').classList.remove('show');
-
-        var q = questions[qIndex];
-        if (!q) return;
-
-        $('progText').textContent = '已完成 ' + qIndex + ' / ' + questions.length;
-        $('progFill').style.width = (qIndex / questions.length * 100) + '%';
-        $('groupLabel').textContent = '每組 ' + q.b + ' 塊';
-
-        $('equation').textContent = q.a + ' × ' + q.b + ' = ?';
-        $('tagA').textContent = '每組 ' + q.b + ' 塊';
-        $('tagB').textContent = '共有 ' + q.a + ' 組';
-
-        var area = $('blocksArea');
-        area.innerHTML = '';
-        for (var i = 0; i < q.a; i++) {
-          var g = document.createElement('div');
-          g.className = 'group';
-          for (var j = 0; j < q.b; j++) {
-            var b = document.createElement('div');
-            b.className = 'block';
-            g.appendChild(b);
+      function unlockSpeech(){
+        if(!('speechSynthesis' in window)) return;
+        try{
+          refreshVoices();
+          if(speechSynthesis.paused) speechSynthesis.resume();
+          if(!speechUnlocked){
+            var u=new SpeechSynthesisUtterance('你好');
+            u.volume=0.01; u.rate=1;
+            if(cantoneseVoice){ u.voice=cantoneseVoice; u.lang=cantoneseVoice.lang; } else { u.lang='zh-HK'; }
+            speechSynthesis.speak(u);
+            speechUnlocked=true;
           }
-          area.appendChild(g);
-        }
-
-        var opts = makeOptions(q.answer);
-        var box = $('options');
-        box.innerHTML = '';
-        for (var k = 0; k < opts.length; k++) {
-          (function (num) {
-            var btn = document.createElement('button');
-            btn.className = 'opt';
-            btn.textContent = num;
-            btn.addEventListener('click', function () {
-              checkAnswer(num, q.answer, btn);
-            });
-            box.appendChild(btn);
-          })(opts[k]);
-        }
-
-        // 自動讀出題目
-        speakCurrentQuestion();
+        }catch(e){}
       }
-
-      function makeOptions(correct) {
-        var set = {};
-        set[correct] = true;
-        var arr = [correct];
-        while (arr.length < 3) {
-          var d = correct + (Math.floor(Math.random() * 5) - 2);
-          if (d <= 0) d = correct + Math.floor(Math.random() * 4) + 1;
-          if (!set[d]) {
-            set[d] = true;
-            arr.push(d);
+      function speakCantonese(text){
+        if(isMuted) return;
+        if(!('speechSynthesis' in window)){ showToast('此瀏覽器不支援語音，請用 Safari / Chrome'); return; }
+        if(!text) return;
+        unlockSpeech();
+        if(!voicesReady){
+          if(!refreshVoices()){
+            var r=0; var t=setInterval(function(){ if(refreshVoices()||r>8){ clearInterval(t); if(voicesReady) speakCantonese(text); else { showToast('搵唔到粵語聲，試用普通話讀出'); speakWithFallback(text); } } r++; },300);
+            return;
           }
         }
-        for (var i = arr.length - 1; i > 0; i--) {
-          var j = Math.floor(Math.random() * (i + 1));
-          var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
-        }
-        return arr;
+        try{ if(speechSynthesis.speaking) speechSynthesis.cancel(); }catch(e){}
+        setTimeout(function(){
+          var utt=new SpeechSynthesisUtterance(text);
+          if(cantoneseVoice){ utt.voice=cantoneseVoice; utt.lang=cantoneseVoice.lang; } else { utt.lang='zh-HK'; }
+          utt.rate=0.82; utt.pitch=1.02; utt.volume=1;
+          var btn=$('btnSpeak'); if(btn) btn.classList.add('speaking');
+          if(speechSynthesis.paused) speechSynthesis.resume();
+          var keep=setInterval(function(){ if(!speechSynthesis.speaking) clearInterval(keep); else try{ speechSynthesis.resume(); }catch(e){} },200);
+          utt.onend=function(){ clearInterval(keep); if(btn) btn.classList.remove('speaking'); };
+          utt.onerror=function(){ clearInterval(keep); if(btn) btn.classList.remove('speaking'); };
+          speechSynthesis.speak(utt);
+        },280);
       }
-
-      function checkAnswer(chosen, correct, btn) {
-        if (answered) return;
-        answered = true;
-
-        var all = document.querySelectorAll('.opt');
-        for (var i = 0; i < all.length; i++) {
-          all[i].disabled = true;
-        }
-
-        if (chosen === correct) {
-          btn.classList.add('correct');
-          correctCount++;
-          storageSet('today', storageGet('today', 0) + 1);
-          storageSet('totalCorrect', storageGet('totalCorrect', 0) + 1);
-          speakCantonese('答對了！');
-          showFeedback(true, correct);
-        } else {
-          btn.classList.add('wrong');
-          for (var i = 0; i < all.length; i++) {
-            if (parseInt(all[i].textContent, 10) === correct) {
-              all[i].classList.add('correct');
-            }
-          }
-          speakCantonese('再想一次！正確答案係 ' + correct);
-          showFeedback(false, correct);
-        }
+      function speakWithFallback(text){ try{ var utt=new SpeechSynthesisUtterance(text); utt.lang='zh-HK'; utt.rate=0.85; speechSynthesis.speak(utt); }catch(e){} }
+      function speakCurrentQuestion(){ var q=questions[qIndex]; if(!q) return; speakCantonese(numToCn(q.a)+'乘'+numToCn(q.b)+'等於幾多呀'); }
+      function showScreen(id){ var ss=document.querySelectorAll('.screen'); for(var i=0;i<ss.length;i++) ss[i].classList.remove('active'); var el=$(id); if(el) el.classList.add('active'); if(id==='practice') renderNumGrid(); if(id==='parent'){ updateParent(); refreshVoices(); } }
+      function generateQuestions(table,count){ var base=[1,2,3,4,5,6,7,8,9]; for(var i=base.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=base[i]; base[i]=base[j]; base[j]=t; } var list=[]; for(var k=0;k<count;k++){ var bv=base[k%9]; if(k>=9) bv=Math.floor(Math.random()*9)+1; list.push({a:table,b:bv,answer:table*bv}); } return list; }
+      function generateMixed(c){ var l=[]; for(var i=0;i<c;i++){ var a=Math.floor(Math.random()*8)+2,b=Math.floor(Math.random()*9)+1; l.push({a:a,b:b,answer:a*b}); } return l; }
+      function startAdventure(){ unlockSpeech(); questions=generateQuestions(2,10); qIndex=0; correctCount=0; showScreen('learn'); renderQuestion(); }
+      function startPractice(n){ unlockSpeech(); questions=generateQuestions(n,10); qIndex=0; correctCount=0; showScreen('learn'); renderQuestion(); }
+      function startQuick(){ unlockSpeech(); questions=generateMixed(10); qIndex=0; correctCount=0; showScreen('learn'); renderQuestion(); }
+      function startMixed(){ unlockSpeech(); questions=generateMixed(10); qIndex=0; correctCount=0; showScreen('learn'); renderQuestion(); }
+      function renderQuestion(){ answered=false; $('questionArea').style.display='block'; $('feedback').classList.remove('show'); var q=questions[qIndex]; if(!q) return; $('progText').textContent='已完成 '+qIndex+' / '+questions.length; $('progFill').style.width=(qIndex/questions.length*100)+'%'; $('groupLabel').textContent='每組 '+q.b+' 塊'; $('equation').textContent=q.a+' × '+q.b+' =?'; $('tagA').textContent='每組 '+q.b+' 塊'; $('tagB').textContent='共有 '+q.a+' 組'; var area=$('blocksArea'); area.innerHTML=''; for(var i=0;i<q.a;i++){ var g=document.createElement('div'); g.className='group'; for(var j=0;j<q.b;j++){ var b=document.createElement('div'); b.className='block'; g.appendChild(b); } area.appendChild(g); } var opts=makeOptions(q.answer); var box=$('options'); box.innerHTML=''; for(var k=0;k<opts.length;k++){ (function(num){ var btn=document.createElement('button'); btn.className='opt'; btn.textContent=num; btn.addEventListener('click', function(){ checkAnswer(num,q.answer,btn); }); box.appendChild(btn); })(opts[k]); } setTimeout(speakCurrentQuestion, 350); }
+      function makeOptions(correct){ var set={}; set[correct]=true; var arr=[correct]; while(arr.length<3){ var d=correct+(Math.floor(Math.random()*5)-2); if(d<=0) d=correct+Math.floor(Math.random()*4)+1; if(!set[d]){ set[d]=true; arr.push(d); } } for(var i=arr.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=arr[i]; arr[i]=arr[j]; arr[j]=t; } return arr; }
+      function checkAnswer(chosen,correct,btn){ if(answered) return; answered=true; var all=document.querySelectorAll('.opt'); for(var i=0;i<all.length;i++) all[i].disabled=true; if(chosen===correct){ btn.classList.add('correct'); correctCount++; storageSet('today',storageGet('today',0)+1); storageSet('totalCorrect',storageGet('totalCorrect',0)+1); speakCantonese('答對咗喇！好叻呀！'); showFeedback(true,correct); } else { btn.classList.add('wrong'); for(var i=0;i<all.length;i++) if(parseInt(all[i].textContent,10)===correct) all[i].classList.add('correct'); speakCantonese('再諗諗，正確答案係'+numToCn(correct)+'呀！'); showFeedback(false,correct); } }
+      function showFeedback(isCorrect,answer){ $('questionArea').style.display='none'; var fb=$('feedback'); fb.classList.add('show'); var q=questions[qIndex]; if(isCorrect){ var e=['🎉','🌟','👏','💪','🏆'], t=['太棒了！','答對了！','真厲害！','滿分！']; $('fbEmoji').textContent=e[Math.floor(Math.random()*e.length)]; $('fbTitle').textContent=t[Math.floor(Math.random()*t.length)]; } else { $('fbEmoji').textContent='💪'; $('fbTitle').textContent='再想一次！'; } $('fbMsg').textContent=q.a+' × '+q.b+' = '+answer; }
+      function nextQuestion(){ qIndex++; if(qIndex>=questions.length){ speakCantonese('本回合完成，答對咗'+numToCn(correctCount)+'題，好叻呀！'); alert('本回合完成！\n答對 '+correctCount+' / '+questions.length+' 題'); showScreen('home'); return; } renderQuestion(); }
+      function showHint(){ var q=questions[qIndex]; if(!q) return; var parts=[]; for(var i=0;i<q.a;i++) parts.push(q.b); speakCantonese('一共有'+numToCn(q.a)+'組，每組有'+numToCn(q.b)+'塊積木'); alert('提示：\n一共有 '+q.a+' 組，每組有 '+q.b+' 塊積木。\n可以一個一個數，或用加法想：\n'+parts.join(' + ')+' =?'); }
+      function renderNumGrid(){ var grid=$('numGrid'); grid.innerHTML=''; for(var n=2;n<=9;n++){ (function(num){ var btn=document.createElement('button'); btn.className='num'; btn.innerHTML=num+'<small>乘法</small>'; btn.addEventListener('click', function(){ startPractice(num); }); grid.appendChild(btn); })(n); } }
+      function updateParent(){ $('todayCount').textContent=storageGet('today',0); $('totalCorrect').textContent=storageGet('totalCorrect',0); var st=$('groupStatus'); st.innerHTML=''; for(var n=2;n<=9;n++){ var div=document.createElement('div'); div.innerHTML='<div style="font-weight:800;color:#3b82f6">×'+n+'</div><div style="font-size:11px;color:#64748b;margin-top:3px">10題</div>'; st.appendChild(div); } }
+      function bind(){
+        isMuted=storageGet('isMuted',false); updateMuteUI();
+        if('speechSynthesis' in window){ refreshVoices(); if(speechSynthesis.onvoiceschanged!==undefined) speechSynthesis.onvoiceschanged=function(){ refreshVoices(); }; setTimeout(refreshVoices,400); setTimeout(refreshVoices,1000); setTimeout(refreshVoices,2000); }
+        var unlockOnce=function(){ unlockSpeech(); }; document.addEventListener('touchend',unlockOnce,{once:true}); document.addEventListener('click',unlockOnce,{once:true});
+        var muteBtns=document.querySelectorAll('.btn-global-mute'); for(var i=0;i<muteBtns.length;i++) muteBtns[i].addEventListener('click',toggleMute);
+        $('btnStart').addEventListener('click',startAdventure);
+        $('btnPractice').addEventListener('click',function(){ unlockSpeech(); showScreen('practice'); });
+        $('btnQuick').addEventListener('click',startQuick);
+        $('btnParent').addEventListener('click',function(){ showScreen('parent'); refreshVoices(); });
+        $('btnHelpHome').addEventListener('click',function(){ alert('每關10題版本：已修復粵語自動讀題。\n如果無聲請到家長專區按測試按鈕。'); });
+        $('btnBackLearn').addEventListener('click',function(){ try{ speechSynthesis.cancel(); }catch(e){} showScreen('home'); });
+        $('btnHelpLearn').addEventListener('click',showHint);
+        $('btnHint').addEventListener('click',showHint);
+        $('btnNext').addEventListener('click',nextQuestion);
+        $('btnSpeak').addEventListener('click',function(){ unlockSpeech(); speakCurrentQuestion(); });
+        $('btnBackPractice').addEventListener('click',function(){ showScreen('home'); });
+        $('btnMixed').addEventListener('click',startMixed);
+        $('btnBackParent').addEventListener('click',function(){ showScreen('home'); });
+        $('btnTestVoice').addEventListener('click',function(){ unlockSpeech(); setTimeout(function(){ speakCantonese('三乘三等於幾多呀'); },100); });
+        $('btnRefreshVoice').addEventListener('click',function(){ refreshVoices(); showToast('已重新檢測聲音'); setTimeout(function(){ speakCantonese('測試成功，而家有粵語啦'); },400); });
       }
-
-      function showFeedback(isCorrect, answer) {
-        $('questionArea').style.display = 'none';
-        var fb = $('feedback');
-        fb.classList.add('show');
-
-        var q = questions[qIndex];
-        if (isCorrect) {
-          var emojis = ['🎉', '🌟', '👏', '💪', '🏆'];
-          var titles = ['太棒了！', '答對了！', '真厲害！', '滿分！'];
-          $('fbEmoji').textContent = emojis[Math.floor(Math.random() * emojis.length)];
-          $('fbTitle').textContent = titles[Math.floor(Math.random() * titles.length)];
-        } else {
-          $('fbEmoji').textContent = '💪';
-          $('fbTitle').textContent = '再想一次！';
-        }
-        $('fbMsg').textContent = q.a + ' × ' + q.b + ' = ' + answer;
-      }
-
-      function nextQuestion() {
-        qIndex++;
-        if (qIndex >= questions.length) {
-          var msg = '本回合完成！答對 ' + correctCount + ' 題';
-          speakCantonese(msg);
-          alert('本回合完成！\n答對 ' + correctCount + ' / ' + questions.length + ' 題');
-          showScreen('home');
-          return;
-        }
-        renderQuestion();
-      }
-
-      function showHint() {
-        var q = questions[qIndex];
-        if (!q) return;
-        var parts = [];
-        for (var i = 0; i < q.a; i++) parts.push(q.b);
-        speakCantonese('一共有 ' + q.a + ' 組，每組有 ' + q.b + ' 塊積木');
-        alert('提示：\n一共有 ' + q.a + ' 組，每組有 ' + q.b + ' 塊積木。\n可以一個一個數，或用加法想：\n' + parts.join(' + ') + ' = ?');
-      }
-
-      function renderNumGrid() {
-        var grid = $('numGrid');
-        grid.innerHTML = '';
-        for (var n = 2; n <= 9; n++) {
-          (function (num) {
-            var btn = document.createElement('button');
-            btn.className = 'num';
-            btn.innerHTML = num + '<small>乘法</small>';
-            btn.addEventListener('click', function () {
-              startPractice(num);
-            });
-            grid.appendChild(btn);
-          })(n);
-        }
-      }
-
-      function updateParent() {
-        $('todayCount').textContent = storageGet('today', 0);
-        $('totalCorrect').textContent = storageGet('totalCorrect', 0);
-
-        var status = $('groupStatus');
-        status.innerHTML = '';
-        for (var n = 2; n <= 9; n++) {
-          var div = document.createElement('div');
-          var state = '已解鎖';
-          var color = '#3b82f6';
-          div.innerHTML = '<div style="font-weight:800;color:' + color + '">×' + n + '</div><div style="font-size:11px;color:#64748b;margin-top:3px">' + state + '</div>';
-          status.appendChild(div);
-        }
-      }
-
-      function bind() {
-        // 載入靜音設定
-        isMuted = storageGet('isMuted', false);
-        updateMuteUI();
-
-        // 全局點擊解鎖聲音
-        document.body.addEventListener('click', unlockSpeech, { once: true });
-
-        // 綁定靜音按鈕
-        var muteBtns = document.querySelectorAll('.btn-global-mute');
-        for (var i = 0; i < muteBtns.length; i++) {
-          muteBtns[i].addEventListener('click', toggleMute);
-        }
-
-        $('btnStart').addEventListener('click', startAdventure);
-        $('btnPractice').addEventListener('click', function () { unlockSpeech(); showScreen('practice'); });
-        $('btnQuick').addEventListener('click', startQuick);
-        $('btnParent').addEventListener('click', function () { showScreen('parent'); });
-        $('btnHelpHome').addEventListener('click', function () {
-          alert('這是一個幫助小朋友用積木理解乘法的小遊戲！\n從積木看懂 → 自己算算 → 關卡挑戰');
-        });
-
-        $('btnBackLearn').addEventListener('click', function () { 
-          if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-          showScreen('home'); 
-        });
-        $('btnHelpLearn').addEventListener('click', showHint);
-        $('btnHint').addEventListener('click', showHint);
-        $('btnNext').addEventListener('click', nextQuestion);
-        $('btnSpeak').addEventListener('click', speakCurrentQuestion);
-
-        $('btnBackPractice').addEventListener('click', function () { showScreen('home'); });
-        $('btnMixed').addEventListener('click', startMixed);
-
-        $('btnBackParent').addEventListener('click', function () { showScreen('home'); });
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', bind);
-      } else {
-        bind();
-      }
+      if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',bind); } else { bind(); }
     })();
   </script>
 </body>
